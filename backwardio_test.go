@@ -32,7 +32,7 @@ func TestBackwardsReader(t *testing.T) {
 
 	for _, test := range tests {
 		t.Run(test.name, func(t *testing.T) {
-			r := NewBackwardsReader(strings.NewReader(test.input))
+			r := NewScanner(strings.NewReader(test.input))
 
 			for _, expect := range test.output {
 				b, err := r.ReadUntil('\n')
@@ -55,7 +55,7 @@ func TestBackwardsReader(t *testing.T) {
 	t.Run("too long", func(t *testing.T) {
 		const input = "aaaaa\nbbbbb"
 
-		r := NewBackwardsReader(strings.NewReader(input))
+		r := NewScanner(strings.NewReader(input))
 
 		_, err := r.ReadUntil('\n')
 		errorEq(t, err, bufio.ErrTooLong)
@@ -85,7 +85,7 @@ func TestBackwardsReaderError(t *testing.T) {
 	for i, seekErr := range seekErrors {
 		t.Run(seekErr.name, func(t *testing.T) {
 			fseek.stage = i
-			r := NewBackwardsReader(fseek)
+			r := NewScanner(fseek)
 
 			_, err := r.ReadUntil(0)
 			errorEq(t, err, fseek.err)

@@ -2,7 +2,14 @@
 
 Package backwardio implements a buffered scanner that scans backwards.
 
-Test coverage: 100%.
+### Test Coverage
+
+```
+―❤―▶ go test -coverprofile=/dev/null
+PASS
+coverage: 100.0% of statements
+ok  	github.com/diamondburned/backwardio	0.002s
+```
 
 ## Why
 

@@ -10,20 +10,21 @@ import (
 
 var maxTok = bufio.MaxScanTokenSize
 
-// BackwardsReader is a reader that reads backwards, similar to bufio except
-// things are scanned backwards.
-type BackwardsReader struct {
+// Scanner is similar to bufio.Scanner, except things are scanned from the
+// bottom up.
+type Scanner struct {
 	r   io.ReadSeeker
 	buf []byte
 	end int64 // last seeked, bound size for buf
 }
 
-func NewBackwardsReader(r io.ReadSeeker) *BackwardsReader {
-	return &BackwardsReader{r: r}
+// NewScanner creates a new backwards scanner.
+func NewScanner(r io.ReadSeeker) *Scanner {
+	return &Scanner{r: r}
 }
 
-// ReadUntil reads until a new line is encountered.
-func (r *BackwardsReader) ReadUntil(delim byte) ([]byte, error) {
+// ReadUntil reads from the bottom up until the given delimiter is encountered.
+func (r *Scanner) ReadUntil(delim byte) ([]byte, error) {
 	for {
 		if r.buf == nil {
 			goto fill
@@ -70,7 +71,7 @@ func (r *BackwardsReader) ReadUntil(delim byte) ([]byte, error) {
 	}
 }
 
-func (r *BackwardsReader) fill() error {
+func (r *Scanner) fill() error {
 	if r.buf == nil {
 		o, err := r.r.Seek(0, io.SeekEnd)
 		if err != nil {
